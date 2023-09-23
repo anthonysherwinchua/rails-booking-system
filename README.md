@@ -22,10 +22,17 @@ git clone https://github.com/anthonysherwinchua/rails-booking-system
 For localhost, run the following commands via psql
 
 ```
-CREATE DATABASE "rails-booking-system-development";
+ALTER USER "booking-system-user" CREATEDB;
+
 CREATE USER "booking-system-user" WITH ENCRYPTED PASSWORD '<strong-password>';
+CREATE DATABASE "rails-booking-system-development";
 GRANT ALL PRIVILEGES ON DATABASE "rails-booking-system-development" TO "booking-system-user";
-ALTER USER "rails-booking-system-development" CREATEDB;
+CREATE DATABASE "rails-booking-system-test";
+GRANT ALL PRIVILEGES ON DATABASE "rails-booking-system-test" TO "booking-system-user";
+
+ALTER DATABASE "rails-booking-system-development" OWNER TO "booking-system-user";
+ALTER DATABASE "rails-booking-system-test" OWNER TO "booking-system-user";
+
 ```
 
 note: you can get the <strong-password> in the development's credential via the following command
