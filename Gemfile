@@ -63,6 +63,9 @@ group :development, :test do
 
   # Use FactoryBot to replace fixtures
   gem "factory_bot_rails", "~> 6.2"
+
+  # Use Shoulda Matchers for one-liners to test common Rails functionality
+  gem 'shoulda-matchers', '~> 5.0'
 end
 
 group :development do
