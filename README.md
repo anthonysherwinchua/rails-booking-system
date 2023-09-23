@@ -1,24 +1,13 @@
-# README
+##### Prerequisites
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The setups steps expect following tools installed on the system.
 
-Things you may want to cover:
+- Git
+- Ruby [3.0.0](https://www.ruby-lang.org/en/news/2020/12/25/ruby-3-0-0-released/)
+- Rails [7.0.8](https://rubyonrails.org/2023/9/9/Rails-7-0-8-has-been-released/)
 
-* Ruby version
+##### 1. Check out the repository
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```bash
+git clone https://github.com/anthonysherwinchua/rails-booking-system
+```
