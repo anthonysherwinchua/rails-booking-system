@@ -60,6 +60,9 @@ group :development, :test do
 
   # Use Rspec to test
   gem 'rspec-rails', '~> 6.0.0'
+
+  # Use FactoryBot to replace fixtures
+  gem "factory_bot_rails", "~> 6.2"
 end
 
 group :development do
