@@ -77,6 +77,9 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+
+  # Use rubocop to enforce and fix guidelines from Ruby Style Guide
+  gem 'rubocop-rails', require: false
 end
 
 group :test do
