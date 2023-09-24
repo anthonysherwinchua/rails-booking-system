@@ -2,3 +2,6 @@ require: rubocop-rails
 
 Documentation:
   Enabled: false
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
