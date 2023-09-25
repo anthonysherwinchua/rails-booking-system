@@ -6,7 +6,11 @@ class Api::Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(current_user, _opts = {})
-    render json: current_user, status: :ok
+    if current_user.persisted?
+      render json: current_user, status: :ok
+    else
+      render json: { message: 'Invalid username/password.' }, status: :unauthorized
+    end
   end
 
   def respond_to_on_destroy
