@@ -53,6 +53,14 @@ You can start the rails server using the command given below.
 
 ```ruby
 bundle exec rails s
-```
+<!-- ``` -->
 
 And now you can visit the site with the URL http://localhost:3000
+
+##### 4. Add ReactJS
+
+Run the following commands to add ReactJS and some of its essential libraries
+
+```
+yarn add react react-dom react-router-dom
+```
