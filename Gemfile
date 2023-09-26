@@ -81,7 +81,7 @@ group :development, :test do
   gem 'shoulda-matchers', '~> 5.0'
 
   # Use JSON Matcher to validate the JSON returned by your Rails JSON APIs
-  gem "json_matchers"
+  gem 'json_matchers'
 end
 
 group :development do

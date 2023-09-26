@@ -1,7 +1,10 @@
-require "rails_helper"
+# frozen_string_literal: true
+
+require 'rails_helper'
 require 'devise/jwt/test_helpers'
 
-RSpec.describe "Manage Users", type: :request do
+# rubocop:disable Metrics/BlockLength
+RSpec.describe 'Manage Users', type: :request do
   context 'user is admin' do
     let(:user) { create(:user, :is_admin) }
     let!(:other_user) { create(:user) }
@@ -10,19 +13,19 @@ RSpec.describe "Manage Users", type: :request do
       sign_in user
     end
 
-    it "allowed to list all users" do
-      get "/admin/users"
+    it 'allowed to list all users' do
+      get '/admin/users'
 
       expect(response.body).to include(other_user.email)
     end
 
-    it "allowed to edit user" do
+    it 'allowed to edit user' do
       get "/admin/users/#{other_user.id}/edit"
 
       expect(response.body).to include("Edit User: #{other_user.name}")
     end
 
-    it "allowed to update user" do
+    it 'allowed to update user' do
       expect(other_user.admin?).to eq(false)
 
       put "/admin/users/#{other_user.id}", params: { user: { admin: true } }
@@ -40,19 +43,19 @@ RSpec.describe "Manage Users", type: :request do
       sign_in user
     end
 
-    it "allowed to list all users" do
-      get "/admin/users"
+    it 'allowed to list all users' do
+      get '/admin/users'
 
       expect(response.body).to include('Access Forbidden')
     end
 
-    it "allowed to edit user" do
+    it 'allowed to edit user' do
       get "/admin/users/#{other_user.id}/edit"
 
       expect(response.body).to include('Access Forbidden')
     end
 
-    it "allowed to update user" do
+    it 'allowed to update user' do
       expect(other_user.admin?).to eq(false)
 
       put "/admin/users/#{other_user.id}", params: { user: { admin: true } }
@@ -62,3 +65,4 @@ RSpec.describe "Manage Users", type: :request do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

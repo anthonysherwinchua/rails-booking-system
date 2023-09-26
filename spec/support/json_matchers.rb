@@ -1,3 +1,5 @@
-require "json_matchers/rspec"
+# frozen_string_literal: true
 
-JsonMatchers.schema_root = "spec/api/schemas"
+require 'json_matchers/rspec'
+
+JsonMatchers.schema_root = 'spec/api/schemas'

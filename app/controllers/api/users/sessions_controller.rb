@@ -23,7 +23,7 @@ class Api::Users::SessionsController < Devise::SessionsController
     else
       render json: { message: 'Couldn\'t find an active session.' }, status: :unauthorized
     end
-  rescue => _e
+  rescue StandardError => _e
     render json: { message: 'Couldn\'t find an active session.' }, status: :unauthorized
   end
 
