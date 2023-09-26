@@ -1,6 +1,11 @@
 <div class="row mt-5">
   <div class="col-4"></div>
   <div class="col-4">
+    <%- flash.each do |name, msg| -%>
+      <div class="alert alert-danger" role="alert">
+        <%= msg %>
+      </div>
+    <%- end -%>
     <h1>Sign In</h1>
 
     <%= form_for(resource, as: resource_name, url: admin_users_sign_in_path, data: { turbo: false }) do |f| %>
