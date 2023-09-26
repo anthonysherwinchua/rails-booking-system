@@ -3,7 +3,6 @@
 require 'rails_helper'
 require 'devise/jwt/test_helpers'
 
-# rubocop:disable Metrics/BlockLength
 RSpec.describe 'User Session', type: :request do
   context 'user tries to register' do
     it 'with valid details' do
@@ -77,4 +76,3 @@ RSpec.describe 'User Session', type: :request do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength
