@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-10 offset-1">
+    <p>
+      <strong>Name:</strong>
+      <%= @room.name %>
+    </p>
+
+    <p>
+      <strong>Capacity:</strong>
+      <%= @room.capacity %>
+    </p>
+
+    <p>
+      <strong>Tags:</strong>
+      <%= @room.tags.join(', ') %>
+    </p>
+
+    <%= link_to 'Edit', edit_admin_room_path(@room), class: 'btn btn-warning' %> |
+    <%= link_to 'Back', admin_rooms_path, class: 'btn btn-secondary' %>
+  </div>
+</div>

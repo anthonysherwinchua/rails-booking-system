@@ -3,7 +3,6 @@
 require 'rails_helper'
 require 'devise/jwt/test_helpers'
 
-# rubocop:disable Metrics/BlockLength
 RSpec.describe 'Manage Users', type: :request do
   context 'user is admin' do
     let(:user) { create(:user, :is_admin) }
@@ -65,4 +64,3 @@ RSpec.describe 'Manage Users', type: :request do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

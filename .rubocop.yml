@@ -5,3 +5,6 @@ Documentation:
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
+
+Metrics/BlockLength:
+  Enabled: false

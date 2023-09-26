@@ -1,0 +1,34 @@
+<!-- app/views/rooms/_form.html.erb -->
+
+<%= form_with(model: [:admin, @room], local: true) do |form| %>
+  <% if @room.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(@room.errors.count, 'error') %> prohibited this room from being saved:</h2>
+
+      <ul>
+        <% @room.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: 'form-label' %>
+    <%= form.text_field :name, class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :capacity, class: 'form-label' %>
+    <%= form.number_field :capacity, class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :tags, 'Tags (comma-separated)', class: 'form-label' %>
+    <%= form.text_field :tags, class: 'form-control', value: @room.tags.join(', ') %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.submit 'Save', class: 'btn btn-primary' %>
+  </div>
+<% end %>
