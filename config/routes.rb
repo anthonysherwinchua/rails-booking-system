@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
     resources :dashboard, only: [:index]
     resources :users, only: [:index, :edit, :update]
+
+    get :forbidden
   end
 
   scope :api, module: :api do
