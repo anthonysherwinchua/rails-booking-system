@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-10 offset-1">
+    <h1>Manage Rooms</h1>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Capacity</th>
+          <th>Tags</th>
+          <th colspan="3"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @rooms.each do |room| %>
+          <tr>
+            <td><%= room.name %></td>
+            <td><%= room.capacity %></td>
+            <td><%= room.tags.join(', ') %></td>
+            <td><%= link_to 'Show', admin_room_path(room), class: 'btn btn-primary' %></td>
+            <td><%= link_to 'Edit', edit_admin_room_path(room), class: 'btn btn-warning' %></td>
+            <td><%= link_to 'Destroy', admin_room_path(room), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= link_to 'New Room', new_admin_room_path, class: 'btn btn-success' %>
+  </div>
+</div>

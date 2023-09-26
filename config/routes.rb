@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     end
 
     resources :dashboard, only: [:index]
+    resources :rooms
     resources :users, only: %i[index edit update]
 
     get :forbidden
