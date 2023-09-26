@@ -16,7 +16,7 @@ const NavBar = () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + user.jti.
+        "Authorization": user.jti,
       },
     })
       .then(res => {
