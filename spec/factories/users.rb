@@ -5,5 +5,10 @@ FactoryBot.define do
     sequence(:name) { |i| "Jean Dupont #{i}" }
     sequence(:email) { |i| "jean_dupont_#{i}@example.com" }
     password { 'verySecurePassw0rd' }
+    admin { false }
+
+    trait :is_admin do
+      admin { true }
+    end
   end
 end
