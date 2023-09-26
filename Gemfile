@@ -76,6 +76,9 @@ group :development, :test do
 
   # Use Shoulda Matchers for one-liners to test common Rails functionality
   gem 'shoulda-matchers', '~> 5.0'
+
+  # Use JSON Matcher to validate the JSON returned by your Rails JSON APIs
+  gem "json_matchers"
 end
 
 group :development do
