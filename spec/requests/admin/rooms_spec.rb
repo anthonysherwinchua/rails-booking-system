@@ -107,4 +107,33 @@ RSpec.describe 'Admin::Rooms', type: :request do
       expect(response).to redirect_to(admin_rooms_path)
     end
   end
+
+
+  context 'GET #index' do
+    it_behaves_like "forbidden access", '/admin/rooms', :get
+  end
+
+  context 'GET #show' do
+    it_behaves_like "forbidden access", '/admin/rooms/1', :get
+  end
+
+  context 'GET #new' do
+    it_behaves_like "forbidden access", "/admin/rooms/new", :get
+  end
+
+  context 'GET #edit' do
+    it_behaves_like "forbidden access", "/admin/rooms/1/edit", :get
+  end
+
+  context 'POST #create' do
+    it_behaves_like "forbidden access", "/admin/rooms", :post
+  end
+
+  context 'PUT #update' do
+    it_behaves_like "forbidden access", "/admin/rooms/1", :put
+  end
+
+  context 'DESTROY #destroy' do
+    it_behaves_like "forbidden access", "/admin/rooms/1", :delete
+  end
 end
