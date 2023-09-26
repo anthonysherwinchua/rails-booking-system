@@ -1,0 +1,28 @@
+<%= form_with(model: user, url: admin_user_path(user)) do |form| %>
+  <% if user.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this admin_user from being saved:</h2>
+
+      <ul>
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row alert alert-secondary">
+    <div class="col-sm-10 offset-sm-2">
+      <div class="form-check">
+        <%= form.check_box :admin, class: 'form-check-input' %>
+        <label class="form-check-label" for="user_admin">
+          Admin?
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <%= form.submit 'Update', :class => 'btn btn-primary' %>
+  </div>
+<% end %>

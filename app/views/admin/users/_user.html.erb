@@ -1,0 +1,9 @@
+<tr>
+  <td class="text-end">
+    <%= link_to "Edit", edit_admin_user_path(user) %>
+  </td>
+  <td><%= user.id %></td>
+  <td><%= "&#x2713;".html_safe if user.admin?  %></td>
+  <td><%= user.email %></td>
+  <td><%= user.name %></td>
+</tr>
