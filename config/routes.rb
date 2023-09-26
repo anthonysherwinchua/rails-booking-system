@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  namespace :admin do
+    devise_scope :user do
+      get 'users/sign_in', to: 'sessions#new'
+      post 'users/sign_in', to: 'sessions#create'
+      delete 'users/sign_out', to: 'sessions#destroy'
+    end
+
+    resources :dashboard, only: [:index]
+  end
+
   scope :api, module: :api do
     devise_for :users,
                path: '',
