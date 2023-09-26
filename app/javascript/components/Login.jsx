@@ -48,9 +48,8 @@ const Login = () => {
               <Error message={message} />
             );
           } else {
-            user = r.data
-            user['jti'] = res.headers.get("Authorization")
-            UserProfile.setUser(user)
+            r.data['jti'] = res.headers.get("Authorization")
+            UserProfile.setUser(r.data)
             navigate(`/`);
           }
         })
