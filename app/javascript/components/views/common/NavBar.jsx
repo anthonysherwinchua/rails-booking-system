@@ -11,13 +11,12 @@ const NavBar = () => {
 
   const logout = () => {
     const url = `/api/logout`;
-    const token = document.querySelector('meta[name="csrf-token"]').content;
 
     fetch(url, {
       method: "DELETE",
       headers: {
-        "X-CSRF-Token": token,
         "Content-Type": "application/json",
+        "Authorization": "Bearer " + user.jti.
       },
     })
       .then(res => {
