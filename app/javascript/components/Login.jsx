@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { handleResponse } from './helpers/handleResponse';
 import Error from './views/common/Error';
 import UserProfile from './views/common/UserProfile';
+import secureLocalStorage from "react-secure-storage";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const Login = () => {
               <Error message={message} />
             );
           } else {
-            r.data['jti'] = res.headers.get("Authorization")
+            secureLocalStorage.setItem("authorization", res.headers.get("Authorization"))
             UserProfile.setUser(r.data)
             navigate(`/`);
           }

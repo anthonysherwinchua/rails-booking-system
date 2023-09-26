@@ -58,7 +58,7 @@ const SignUp = () => {
             })
             setMessage(errorMessages);
           } else {
-            r.data['jti'] = res.headers.get("Authorization")
+            secureLocalStorage.setItem("authorization", res.headers.get("Authorization"))
             UserProfile.setUser(r.data)
             navigate(`/`);
           }

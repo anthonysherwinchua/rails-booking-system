@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import NavLink from "./NavLink"
 import Confirm from './Confirm';
 import UserProfile from './UserProfile';
+import secureLocalStorage from "react-secure-storage";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const NavBar = () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": user.jti,
+        "Authorization": secureLocalStorage.getItem("authorization"),
       },
     })
       .then(res => {
@@ -35,6 +36,7 @@ const NavBar = () => {
         setErrorMessage('Something went wrong. <br/>Error Message: ' + e);
       })
       .finally(() => {
+        secureLocalStorage.removeItem("authorization")
         UserProfile.removeUser()
         navigate(`/`);
       });
