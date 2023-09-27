@@ -1,3 +1,39 @@
 body {
   background-color: #FAF9F6;
 }
+
+.flash-message-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+/* Custom styles for different types of messages */
+.toast-success {
+  background-color: #28a745;
+  /* Green for success */
+  color: #fff;
+  /* White text on green background */
+}
+
+.toast-failure {
+  background-color: #dc3545;
+  /* Red for failure */
+  color: #fff;
+  /* White text on red background */
+}
+
+.toast-warning {
+  background-color: #ffc107;
+  /* Yellow for warning */
+  color: #333;
+  /* Dark text on yellow background */
+}
+
+.toast-info {
+  background-color: #007bff;
+  /* Blue for info */
+  color: #fff;
+  /* White text on blue background */
+}
