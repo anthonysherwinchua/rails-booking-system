@@ -4,7 +4,7 @@ import EventContext from "./EventContext";
 
 const MESSAGE_CLASSES = {
   success: "toast-success",
-  failure: "toast-danger",
+  failure: "toast-failure",
   warning: "toast-warning",
   info: "toast-info",
 };
@@ -24,7 +24,7 @@ const FlashMessage = () => {
 
       setTimeout(() => {
         setShow(false);
-      }, 3000);
+      }, 7000);
     });
 
     return () => {
@@ -32,10 +32,14 @@ const FlashMessage = () => {
     };
   }, [eventEmitter]);
 
+  const messageContent = (
+    <div dangerouslySetInnerHTML={{ __html: message }} />
+  );
+
   return (
     <Toast show={show} onClose={() => setShow(false)} className="flash-message-container">
       <Toast.Header className={MESSAGE_CLASSES[messageType]}>
-        <strong className="me-auto">{message}</strong>
+        <strong className="me-auto">{messageContent}</strong>
       </Toast.Header>
     </Toast>
   );

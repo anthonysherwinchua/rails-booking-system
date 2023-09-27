@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { handleResponse } from './helpers/handleResponse';
-import Error from './views/common/Error';
-import UserProfile from './views/common/UserProfile';
 import secureLocalStorage from "react-secure-storage";
+import { handleResponse } from './helpers/handleResponse';
+import EventContext from "./views/common/EventContext";
+import UserProfile from './views/common/UserProfile';
 
 const Login = () => {
   const navigate = useNavigate();
+  const eventEmitter = useContext(EventContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState('');
 
   const onChange = (event, setFunction) => {
     setFunction(event.target.value);
@@ -43,20 +43,17 @@ const Login = () => {
       .then(res => {
         handleResponse(res, (r) => {
           if (r.status == 'error') {
-            const message = JSON.parse(r.data).message
-
-            setMessage(
-              <Error message={message} />
-            );
+            eventEmitter.emit("showMessage", { text: JSON.parse(r.data)['message'], type: "failure" });
           } else {
+            eventEmitter.emit("showMessage", { text: r.data['message'], type: "success" });
             secureLocalStorage.setItem("authorization", res.headers.get("Authorization"))
-            UserProfile.setUser(r.data)
+            UserProfile.setUser(JSON.parse(r.data['user']))
             navigate(`/`);
           }
         })
       })
       .catch((e) => {
-        setMessage('Something went wrong. <br/>Error Message: ' + e);
+        eventEmitter.emit("showMessage", { text: 'Something went wrong. <br/>Error Message: ' + e, type: "success" });
       });
   };
 
@@ -65,10 +62,6 @@ const Login = () => {
       <section className="jumbotron jumbotron-fluid text-center">
         <div className="container">
           <h1 className="display-4">Login Page</h1>
-          <p className="lead text-muted">
-            Here is the form to login
-          </p>
-          {message}
         </div>
       </section>
       <div>

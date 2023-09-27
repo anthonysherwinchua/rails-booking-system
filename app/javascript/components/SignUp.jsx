@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleResponse } from './helpers/handleResponse';
-import Error from './views/common/Error';
 import UserProfile from './views/common/UserProfile';
+import EventContext from "./views/common/EventContext";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [message, setMessage] = useState('');
+  const eventEmitter = useContext(EventContext);
 
   const onChange = (event, setFunction) => {
     setFunction(event.target.value);
@@ -49,23 +49,21 @@ const SignUp = () => {
             const data = JSON.parse(r.data)
             let errorMessages = [];
             Object.keys(data).forEach(function (key) {
-              var message = data[key];
-              errorMessages.push(
-                <Error key={key} message={key.replace(/_/g, ' ') + " " + message} />
-              );
+              errorMessages.push(key + " " + data[key]);
               const inputField = document.getElementById(key);
               inputField.classList.add('is-invalid');
             })
-            setMessage(errorMessages);
+            eventEmitter.emit("showMessage", { text: errorMessages.join("<br/>"), type: "failure" });
           } else {
+            eventEmitter.emit("showMessage", { text: r.data['message'], type: "success" });
             secureLocalStorage.setItem("authorization", res.headers.get("Authorization"))
-            UserProfile.setUser(r.data)
+            UserProfile.setUser(JSON.parse(r.data))
             navigate(`/`);
           }
         })
       })
       .catch((e) => {
-        setMessage('Something went wrong. <br/>Error Message: ' + e);
+        eventEmitter.emit("showMessage", { text: 'Something went wrong. <br/>Error Message: ' + e, type: "failure" });
       });
   };
 
@@ -74,10 +72,6 @@ const SignUp = () => {
       <section className="jumbotron jumbotron-fluid text-center">
         <div className="container">
           <h1 className="display-4">Sign Up Page</h1>
-          <p className="lead text-muted">
-            Here is the form to sign up
-          </p>
-          {message}
         </div>
       </section>
       <div>
@@ -102,7 +96,7 @@ const SignUp = () => {
                   <input type="password" name="password_confirmation" id="password_confirmation" className="form-control" required onChange={(event) => onChange(event, setPasswordConfirmation)} />
                 </div>
                 <button type="submit" className="btn btn-primary mt-3">
-                  Save
+                  Sign Up
                 </button>
               </form>
             </div>
