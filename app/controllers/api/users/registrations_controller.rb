@@ -10,7 +10,7 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
   def respond_with(current_user, _opts = {})
     if resource.persisted?
       render json: {
-        user: current_user,
+        user: UserSerializer.new(current_user).serializable_hash.to_json,
         message: 'Signed up successfully'
       }, status: :ok
     else

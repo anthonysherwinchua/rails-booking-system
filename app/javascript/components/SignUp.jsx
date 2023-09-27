@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import secureLocalStorage from "react-secure-storage";
 import { handleResponse } from './helpers/handleResponse';
 import UserProfile from './views/common/UserProfile';
 import EventContext from "./views/common/EventContext";
@@ -57,7 +58,7 @@ const SignUp = () => {
           } else {
             eventEmitter.emit("showMessage", { text: r.data['message'], type: "success" });
             secureLocalStorage.setItem("authorization", res.headers.get("Authorization"))
-            UserProfile.setUser(JSON.parse(r.data))
+            UserProfile.setUser(JSON.parse(r.data['user']))
             navigate(`/`);
           }
         })
