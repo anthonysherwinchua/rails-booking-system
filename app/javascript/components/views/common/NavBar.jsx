@@ -22,6 +22,7 @@ const NavBar = () => {
   } else {
     sessionNavLink = (
       <>
+        <li className="nav-item"><NavLink path="/rooms" text="Book Meeting Room" /></li>
         <li className="nav-item"><NavLink path="/me" text="My Profile" /></li>
         <LogOut />
       </>
