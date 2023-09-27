@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
+import { handleResponse } from './helpers/handleResponse';
 import Confirm from './views/common/Confirm';
 import UserProfile from './views/common/UserProfile';
 
@@ -25,8 +26,6 @@ const LogOut = () => {
               <Error key={key} message={message} />
             ));
             setErrorMessage(errorMessages);
-          } else {
-            navigate(`/`);
           }
         })
       })
@@ -34,8 +33,8 @@ const LogOut = () => {
         setErrorMessage('Something went wrong. <br/>Error Message: ' + e);
       })
       .finally(() => {
-        secureLocalStorage.removeItem("authorization")
-        UserProfile.removeUser()
+        secureLocalStorage.removeItem("authorization");
+        UserProfile.removeUser();
         navigate(`/`);
       });
   };
