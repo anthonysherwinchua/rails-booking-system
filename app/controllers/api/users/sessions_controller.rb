@@ -9,7 +9,10 @@ class Api::Users::SessionsController < Devise::SessionsController
 
   def respond_with(current_user, _opts = {})
     if current_user.persisted?
-      render json: UserSerializer.new(current_user).serializable_hash.to_json, status: :ok
+      render json: {
+        user: UserSerializer.new(current_user).serializable_hash.to_json,
+        message: 'Logged in successfully'
+      }, status: :ok
     else
       render json: { message: 'Invalid username/password.' }, status: :unauthorized
     end
