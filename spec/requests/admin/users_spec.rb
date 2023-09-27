@@ -27,9 +27,9 @@ RSpec.describe 'Manage Users', type: :request do
 
   describe 'PATCH /admin/users/:id' do
     it 'updates the requested user' do
-      expect {
+      expect do
         patch admin_user_path(other_user), params: { user: { admin: true } }
-      }.to change { other_user.reload.admin }.from(false).to(true)
+      end.to change { other_user.reload.admin }.from(false).to(true)
     end
 
     it 'redirects to the user' do
@@ -39,14 +39,14 @@ RSpec.describe 'Manage Users', type: :request do
   end
 
   context 'GET #index' do
-    it_behaves_like "forbidden access", '/admin/users', :get
+    it_behaves_like 'forbidden access', '/admin/users', :get
   end
 
   context 'GET #edit' do
-    it_behaves_like "forbidden access", "/admin/users/1/edit", :get
+    it_behaves_like 'forbidden access', '/admin/users/1/edit', :get
   end
 
   context 'GET #edit' do
-    it_behaves_like "forbidden access", "/admin/users/1", :put
+    it_behaves_like 'forbidden access', '/admin/users/1', :put
   end
 end

@@ -11,7 +11,7 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
     if resource.persisted?
       render json: {
         user: current_user,
-        message: "Signed up successfully"
+        message: 'Signed up successfully'
       }, status: :ok
     else
       render json: current_user.errors, status: :unprocessable_entity
