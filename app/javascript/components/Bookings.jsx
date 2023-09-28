@@ -59,6 +59,7 @@ const Bookings = () => {
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -68,8 +69,13 @@ const Bookings = () => {
                   <td>{booking.start_time}</td>
                   <td>{booking.end_time}</td>
                   <td>
-                    <Link to={`/bookings/${booking.id}`} className="btn btn-primary mr-2">
+                    <Link to={`/bookings/${booking.id}`} className="btn btn-info mr-2">
                       Show Details
+                    </Link>
+                  </td>
+                  <td>
+                    <Link to={`/bookings/${booking.id}/edit`} className="btn btn-primary mr-2">
+                      Edit Booking
                     </Link>
                   </td>
                 </tr>

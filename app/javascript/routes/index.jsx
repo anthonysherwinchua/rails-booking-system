@@ -7,6 +7,7 @@ import SignUp from "../components/SignUp";
 
 import Bookings from "../components/Bookings";
 import BookingDetails from "../components/BookingDetails";
+import BookingEdit from "../components/BookingEdit";
 import Profile from "../components/Profile";
 import Rooms from "../components/Rooms";
 
@@ -19,5 +20,6 @@ export default (
     <Route path="/rooms" element={<Rooms />} />
     <Route path="/bookings" element={<Bookings />} />
     <Route path="/bookings/:id" element={<BookingDetails />} />
+    <Route path="/bookings/:id/edit" element={<BookingEdit />} />
   </Routes>
 );
