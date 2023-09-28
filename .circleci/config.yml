@@ -38,7 +38,7 @@ jobs:
       - run:
           name: Push Docker image to ECR
           command: |
-            docker tag rails_booking_system_web:latest 003006742287.dkr.ecr.ap-southeast-1.amazonaws.com/rails-booking-system:latest
+            docker tag railsbookingsystem_web:latest 003006742287.dkr.ecr.ap-southeast-1.amazonaws.com/rails-booking-system:latest
             docker push 003006742287.dkr.ecr.ap-southeast-1.amazonaws.com/rails-booking-system:latest
 
   deploy:
