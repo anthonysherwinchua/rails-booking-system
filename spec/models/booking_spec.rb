@@ -26,5 +26,26 @@ RSpec.describe Booking, type: :model do
                                             end_time: Time.zone.now + 1.hour + 30.minutes)
       expect(overlapping_booking).not_to be_valid
     end
+
+    it 'ensures start_time cannot be in the past' do
+      booking = build(:booking, user: user, room: room, start_time: Time.zone.now - 1.hour,
+                                end_time: Time.zone.now + 1.hour)
+      expect(booking).not_to be_valid
+    end
+
+    it 'ensures past bookings cannot be updated' do
+      past_booking = create(:booking, user: user, room: room)
+      # rubocop:disable Rails/SkipsModelValidations
+      past_booking.update_columns(start_time: Time.zone.now - 2.5.hours, end_time: Time.zone.now - 1.5.hours)
+      # rubocop:enable Rails/SkipsModelValidations
+      past_booking.reload
+
+      t = Time.zone.now
+      past_booking.start_time = t + 30.minutes
+      past_booking.end_time = t + 1.hour
+
+      expect(past_booking).not_to be_valid
+      expect(past_booking.errors.full_messages).to include('Past bookings cannot be updated')
+    end
   end
 end

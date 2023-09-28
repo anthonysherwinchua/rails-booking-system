@@ -1,8 +1,16 @@
 # frozen_string_literal: true
 
-class UserSerializer < ActiveModel::Serializer
-  attributes :id, :start_time, :end_time
+class BookingSerializer < ActiveModel::Serializer
+  attributes :id
 
-  belongs_to :user
-  belongs_to :room
+  attribute :start_time do
+    object.start_time.strftime('%a %b %e %Y %I:%M %p')
+  end
+
+  attribute :end_time do
+    object.end_time.strftime('%a %b %e %Y %I:%M %p')
+  end
+
+  has_one :user
+  has_one :room
 end
