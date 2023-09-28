@@ -1,4 +1,3 @@
-admin: env RUBY_DEBUG_OPEN=true PIDFILE=tmp/pids/admin_server.pid bin/rails server -p 3001
 web: env RUBY_DEBUG_OPEN=true PIDFILE=tmp/pids/server.pid bin/rails server -p 3000
 js: yarn build --watch
 css: yarn watch:css
