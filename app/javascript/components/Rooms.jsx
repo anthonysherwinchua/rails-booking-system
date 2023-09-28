@@ -11,6 +11,8 @@ const Rooms = () => {
 
   const [capacity, setCapacity] = useState("");
   const [tags, setTags] = useState("");
+  const [bookingStartTime, setBookingStartTime] = useState("");
+  const [bookingEndTime, setBookingEndTime] = useState("");
 
   useEffect(() => {
     fetchRooms(); // Fetch all rooms on component mount
@@ -27,6 +29,12 @@ const Rooms = () => {
       tags.forEach((tag) => {
         queryParams.push(`tags[]=${encodeURIComponent(tag)}`);
       });
+    }
+    if (bookingStartTime !== "") {
+      queryParams.push(`start_time=${encodeURIComponent(bookingStartTime)}`);
+    }
+    if (bookingEndTime !== "") {
+      queryParams.push(`end_time=${encodeURIComponent(bookingEndTime)}`);
     }
     const queryString = queryParams.join("&");
     if (queryString) {
@@ -84,6 +92,24 @@ const Rooms = () => {
       <div className="row">
         <div className="col-md-3">
           <form onSubmit={handleFormSubmit}>
+            <div className="mb-3">
+              <label className="form-label">Booking Start Time:</label>
+              <input
+                type="datetime-local"
+                className="form-control"
+                value={bookingStartTime}
+                onChange={(e) => setBookingStartTime(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Booking End Time:</label>
+              <input
+                type="datetime-local"
+                className="form-control"
+                value={bookingEndTime}
+                onChange={(e) => setBookingEndTime(e.target.value)}
+              />
+            </div>
             <div className="mb-3">
               <label className="form-label">Minimum Pax:</label>
               <select
