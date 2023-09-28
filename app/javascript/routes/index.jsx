@@ -4,6 +4,7 @@ import Home from "../components/Home";
 import SignUp from "../components/SignUp";
 import Login from "../components/Login";
 import Profile from "../components/Profile";
+import Rooms from "../components/Rooms";
 
 export default (
   <Routes>
@@ -11,5 +12,6 @@ export default (
     <Route path="/signup" element={<SignUp />} />
     <Route path="/login" element={<Login />} />
     <Route path="/me" element={<Profile />} />
+    <Route path="/rooms" element={<Rooms />} />
   </Routes>
 );
