@@ -4,11 +4,11 @@ class BookingSerializer < ActiveModel::Serializer
   attributes :id
 
   attribute :start_time do
-    object.start_time.strftime("%a %b %e %Y %I:%M %p")
+    object.start_time.strftime('%a %b %e %Y %I:%M %p')
   end
 
   attribute :end_time do
-    object.end_time.strftime("%d %B %Y %r")
+    object.end_time.strftime('%a %b %e %Y %I:%M %p')
   end
 
   has_one :user
