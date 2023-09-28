@@ -45,6 +45,6 @@ class FilteredRooms
 
   def rooms_with_overlapping_bookings(start_time, end_time)
     Booking.where('start_time < ? AND end_time > ? OR start_time >= ? AND end_time <= ?',
-               end_time, start_time, end_time, start_time).pluck(:room_id)
+                  end_time, start_time, end_time, start_time).pluck(:room_id)
   end
 end
