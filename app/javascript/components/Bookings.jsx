@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import secureLocalStorage from "react-secure-storage";
 import { handleResponse } from './helpers/handleResponse';
 import EventContext from "./views/common/EventContext";
 
 const Bookings = () => {
+  const navigate = useNavigate();
   const eventEmitter = useContext(EventContext);
   const [bookings, setBookings] = useState([]);
 
@@ -42,6 +44,10 @@ const Bookings = () => {
       })
   };
 
+  const handleShowBooking = (bookingId) => {
+    navigate(`/bookings/${bookingId}`);
+  };
+
   return (
     <div className="container">
       <div className="row">
@@ -52,6 +58,7 @@ const Bookings = () => {
                 <th>Room Name</th>
                 <th>Start Time</th>
                 <th>End Time</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -60,6 +67,11 @@ const Bookings = () => {
                   <td>{booking.room.name}</td>
                   <td>{booking.start_time}</td>
                   <td>{booking.end_time}</td>
+                  <td>
+                    <Link to={`/bookings/${booking.id}`} className="btn btn-primary mr-2">
+                      Show Details
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>
