@@ -6,7 +6,7 @@ class Api::V1::RoomsController < ::Api::ApplicationController
   def index
     @rooms = Room.all
     @rooms = @rooms.where('capacity >= ?', params[:capacity]) if params[:capacity]
-    @rooms = @rooms.where("tags && ARRAY[?]::varchar[]", tags) if tags.present?
+    @rooms = @rooms.where('tags && ARRAY[?]::varchar[]', tags) if tags.present?
 
     render json: @rooms, each_serializer: RoomSerializer
   end
