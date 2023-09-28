@@ -10,4 +10,6 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   validates :name, presence: true, uniqueness: true
+
+  has_many :bookings, dependent: :destroy
 end
