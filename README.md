@@ -38,6 +38,8 @@ ALTER DATABASE "rails-booking-system-test" OWNER TO "booking-system-user";
 note: you can get the <strong-password> in the development's credential via the following command
 `EDITOR=cat rails credentials:edit -e development`
 
+note #2: you can replace the credentials and update the values with the template provided on config/credentials/development.yml.sample
+
 For staging/production, after you create the database in Amazon, you need to update the
 database configuration in the respective credentials
 
