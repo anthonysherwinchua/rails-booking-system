@@ -56,6 +56,25 @@ RSpec.describe 'API::Rooms', type: :request do
         expect(json_response.first['capacity']).to eq(10)
         expect(json_response.first['tags']).to include('meeting')
       end
+
+      it 'filters rooms by booking timing' do
+        headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
+        auth_headers = Devise::JWT::TestHelpers.auth_headers(headers, user)
+
+        start_time = Time.zone.now - 2.5.hours
+        end_time = Time.zone.now - 1.5.hours
+
+        past_booking = create(:booking, room: room1)
+        # rubocop:disable Rails/SkipsModelValidations
+        past_booking.update_columns(start_time: start_time, end_time: end_time)
+        # rubocop:enable Rails/SkipsModelValidations
+
+        get '/api/v1/rooms', params: { start_time: start_time - 5.minutes, end_time: end_time - 5.minutes },
+                             headers: auth_headers
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body).count).to eq(1)
+        expect(JSON.parse(response.body).first['id']).to eq(room2.id)
+      end
     end
   end
 end

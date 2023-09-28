@@ -35,7 +35,9 @@ RSpec.describe Booking, type: :model do
 
     it 'ensures past bookings cannot be updated' do
       past_booking = create(:booking, user: user, room: room)
+      # rubocop:disable Rails/SkipsModelValidations
       past_booking.update_columns(start_time: Time.zone.now - 2.5.hours, end_time: Time.zone.now - 1.5.hours)
+      # rubocop:enable Rails/SkipsModelValidations
       past_booking.reload
 
       t = Time.zone.now
