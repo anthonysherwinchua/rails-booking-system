@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :room do
-    name { 'MyString' }
+    sequence(:name) { |i| "Room ##{i}" }
     capacity { 1 }
   end
 end
