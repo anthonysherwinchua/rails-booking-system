@@ -27,6 +27,7 @@ Rails.application.routes.draw do
                  sessions: 'api/users/sessions',
                  registrations: 'api/users/registrations'
                }
+    resources :bookings
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
