@@ -1,0 +1,20 @@
+# frozen_string_literal: true
+
+class Api::ApplicationController < ActionController::API
+  private
+
+  def authenticate_user!
+    current_user = User.find(jwt_payload['sub']) if request.headers['Authorization'].present?
+
+    render json: { message: 'Couldn\'t find an active session.' }, status: :unauthorized unless current_user
+  rescue StandardError => _e
+    render json: { message: 'Couldn\'t find an active session.' }, status: :unauthorized
+  end
+
+  def jwt_payload
+    JWT.decode(
+      request.headers['Authorization'].split(' ').last,
+      Rails.application.credentials.devise_jwt_secret_key!
+    ).first
+  end
+end
