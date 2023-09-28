@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import secureLocalStorage from "react-secure-storage";
 import { handleResponse } from './helpers/handleResponse';
 import EventContext from "./views/common/EventContext";
+import Confirm from './views/common/Confirm';
 
 const Rooms = () => {
   const eventEmitter = useContext(EventContext);
@@ -13,9 +14,10 @@ const Rooms = () => {
   const [tags, setTags] = useState("");
   const [bookingStartTime, setBookingStartTime] = useState("");
   const [bookingEndTime, setBookingEndTime] = useState("");
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
 
   useEffect(() => {
-    fetchRooms(); // Fetch all rooms on component mount
+    fetchRooms();
   }, []);
 
   const fetchRooms = () => {
@@ -87,6 +89,52 @@ const Rooms = () => {
     fetchRooms();
   };
 
+  const bookRoom = () => {
+    const url = `/api/v1/bookings/`;
+
+    const body = {
+      booking: {
+        start_time: bookingStartTime,
+        end_time: bookingEndTime,
+        room_id: selectedRoomId,
+      }
+    };
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": secureLocalStorage.getItem("authorization"),
+      },
+      body: JSON.stringify(body),
+    })
+      .then(res => {
+        handleResponse(res, (r) => {
+          if (r.status == 'error') {
+            let data = JSON.parse(r.data)
+            let errorMessages = [];
+            Object.keys(data).forEach(function (key) {
+              const keyMessage = key.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+              let message = keyMessage + " " + data[key];
+              if (key == 'base') { message = data[key] }
+              errorMessages.push(message);
+              const inputField = document.getElementById(key);
+              if (inputField) {
+                inputField.classList.add('is-invalid');
+              }
+            })
+            eventEmitter.emit("showMessage", { text: errorMessages.join("<br/>"), type: "failure" });
+          } else {
+            eventEmitter.emit("showMessage", { text: 'Bookings successfully created', type: "success" });
+            fetchRooms();
+          }
+        })
+      })
+      .catch((e) => {
+        eventEmitter.emit("showMessage", { text: 'Something went wrong. <br/>Error Message: ' + e, type: "failure" });
+      });
+  };
+
   return (
     <div className="container">
       <div className="row">
@@ -150,12 +198,13 @@ const Rooms = () => {
           </form>
         </div>
         <div className="col-md-9">
-          <table className="table">
+          <table className="table table-hover">
             <thead>
               <tr>
                 <th>Room Name</th>
                 <th>Capacity</th>
                 <th>availableTags</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -164,13 +213,32 @@ const Rooms = () => {
                   <td>{room.name}</td>
                   <td>{room.capacity}</td>
                   <td>{room.tags.join(', ')}</td>
+                  <td>
+                    <button
+                      className="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#confirmModalBooking"
+                      onClick={() => setSelectedRoomId(room.id)}
+                      disabled={!bookingStartTime || !bookingEndTime}
+                    >
+                      Book
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
-    </div>
+      <Confirm
+        modalID="confirmModalBooking"
+        title={"Book this room"}
+        message="Are you sure?"
+        confirm="Book!"
+        cancel="No"
+        onConfirm={bookRoom}
+      />
+    </div >
   );
 };
 

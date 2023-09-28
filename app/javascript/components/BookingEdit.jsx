@@ -67,7 +67,6 @@ const BookingEdit = () => {
         handleResponse(res, (r) => {
           if (r.status == 'error') {
             let data = JSON.parse(r.data)
-            console.log("<<< ", data)
             let errorMessages = [];
             Object.keys(data).forEach(function (key) {
               const keyMessage = key.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
