@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Api::ApplicationController < ActionController::API
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+
+  def record_not_found
+    render json: { message: 'Couldn\'t find record' }, status: :not_found
+  end
+
   private
 
   def authenticate_user!
