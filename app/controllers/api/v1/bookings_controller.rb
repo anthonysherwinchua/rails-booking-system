@@ -5,7 +5,7 @@ class Api::V1::BookingsController < ::Api::ApplicationController
 
   def index
     @bookings = current_user.bookings
-    render json: @bookings
+    render json: @bookings, include: params[:include]
   end
 
   def show
