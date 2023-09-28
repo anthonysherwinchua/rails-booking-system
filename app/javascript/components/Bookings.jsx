@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import secureLocalStorage from "react-secure-storage";
 import { handleResponse } from './helpers/handleResponse';
 import EventContext from "./views/common/EventContext";
+import Confirm from './views/common/Confirm';
 
 const Bookings = () => {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ const Bookings = () => {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    fetchBookings(); // Fetch all rooms on component mount
+    fetchBookings();
   }, []);
 
   const fetchBookings = () => {
@@ -44,8 +45,29 @@ const Bookings = () => {
       })
   };
 
-  const handleShowBooking = (bookingId) => {
-    navigate(`/bookings/${bookingId}`);
+  const deleteBooking = (id) => {
+    const url = `/api/v1/bookings/${id}`;
+
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": secureLocalStorage.getItem("authorization"),
+      },
+    })
+      .then(res => {
+        handleResponse(res, (r) => {
+          if (r.status == 'error') {
+            eventEmitter.emit("showMessage", { text: JSON.parse(r.data)['message'], type: "failure" });
+          } else {
+            eventEmitter.emit("showMessage", { text: 'Bookings succesfully deleted', type: "success" });
+            fetchBookings();
+          }
+        })
+      })
+      .catch((e) => {
+        eventEmitter.emit("showMessage", { text: 'Something went wrong. <br/>Error Message: ' + e, type: "failure" });
+      })
   };
 
   return (
@@ -77,6 +99,12 @@ const Bookings = () => {
                     <Link to={`/bookings/${booking.id}/edit`} className="btn btn-primary mr-2">
                       Edit Booking
                     </Link>
+                  </td>
+                  <td>
+                    <Link className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModalDelete">
+                      Delete Booking
+                    </Link>
+                    <Confirm modalID="confirmModalDelete" title={"Deleting Booking: " + booking.room.name} message="Are you sure?" confirm="Delete!" cancel="No" onConfirm={() => deleteBooking(booking.id)} />
                   </td>
                 </tr>
               ))}
