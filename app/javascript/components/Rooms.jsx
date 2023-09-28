@@ -17,7 +17,7 @@ const Rooms = () => {
   }, []);
 
   const fetchRooms = () => {
-    let url = "/api/rooms";
+    let url = "/api/v1/rooms";
 
     const queryParams = [];
     if (capacity !== "") {
