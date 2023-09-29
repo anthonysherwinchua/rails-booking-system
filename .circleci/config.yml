@@ -1,10 +1,69 @@
 version: 2.1
+
+orbs:
+  node: circleci/node@4.1.0
+
 jobs:
+  rspec:
+    working_directory: ~/rails_booking_system
+
+    docker:
+      - image: ruby:2.7.1
+
+      - image: cimg/postgres:14.0
+        environment:
+          POSTGRES_USER: "booking-system-user"
+          POSTGRES_PASSWORD: ''
+          POSTGRES_DB: "rails-booking-system-test"
+
+    environment:
+      RAILS_ENV: test
+
+    steps:
+      - checkout
+      - node/install
+
+      - run: |
+          rm -rf ~/.yarn
+          curl -o- -L https://yarnpkg.com/install.sh | bash
+          export PATH="$HOME/.yarn/bin:$PATH"
+          yarn config set prefix ~/.yarn -g
+          echo 'export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"' >> $BASH_ENV
+
+      - run:
+          name: Install Dependencies
+          command: |
+            gem install bundler
+            bundle install --jobs=3 --retry=3
+
+      - run:
+          name: Set Up Database and Run RSpec Tests
+          command: |
+            bundle exec rails db:migrate
+
+      - run:
+          name: Precompile Assets
+          command: |
+            bundle exec rake assets:precompile
+
+      - save_cache:
+          key: my_project-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          name: Run RSpec Tests
+          command: |
+            bundle exec rspec
+
   build:
     working_directory: ~/rails_booking_system
 
     docker:
       - image: docker:17.05.0-ce-git
+
+    environment:
+      RAILS_ENV: test
 
     steps:
       - checkout
@@ -81,7 +140,10 @@ jobs:
 workflows:
   build-test-and-deploy:
     jobs:
-      - build
+      - rspec
+      - build:
+          requires:
+            - rspec
       - deploy:
           requires:
             - build
