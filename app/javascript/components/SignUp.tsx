@@ -1,7 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
 import { handleResponse } from './helpers/handleResponse';
+import { ResponseTypeInterface } from './interfaces/response_type_interface';
 import UserProfile from './views/common/UserProfile';
 import EventContext from "./views/common/EventContext";
 
@@ -12,12 +13,15 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const eventEmitter = useContext(EventContext);
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
 
-  const onChange = (event, setFunction) => {
+  const onChange = (event: ChangeEvent<HTMLInputElement>, setFunction: (value: string) => void): void => {
     setFunction(event.target.value);
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const url = "/api/signup";
 
@@ -45,19 +49,25 @@ const SignUp = () => {
       body: JSON.stringify(body),
     })
       .then(res => {
-        handleResponse(res, (r) => {
+        handleResponse(res as Response, (r: ResponseTypeInterface) => {
           if (r.status == 'error') {
             const data = JSON.parse(r.data)
-            let errorMessages = [];
+            let errorMessages: string[] = [];
             Object.keys(data).forEach(function (key) {
               errorMessages.push(key + " " + data[key]);
               const inputField = document.getElementById(key);
-              inputField.classList.add('is-invalid');
+              if (inputField !== null) {
+                inputField.classList.add('is-invalid');
+              }
             })
             eventEmitter.emit("showMessage", { text: errorMessages.join("<br/>"), type: "failure" });
           } else {
             eventEmitter.emit("showMessage", { text: r.data['message'], type: "success" });
-            secureLocalStorage.setItem("authorization", res.headers.get("Authorization"))
+            const authorizationHeader = res.headers.get("Authorization");
+
+            if (authorizationHeader !== null) {
+              secureLocalStorage.setItem("authorization", authorizationHeader);
+            }
             UserProfile.setUser(JSON.parse(r.data['user']))
             navigate(`/`);
           }

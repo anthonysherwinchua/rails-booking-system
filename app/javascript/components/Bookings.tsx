@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import secureLocalStorage from "react-secure-storage";
+import { BookingInterface } from './interfaces/booking_interface';
+import { ResponseTypeInterface } from './interfaces/response_type_interface';
 import { handleResponse } from './helpers/handleResponse';
 import { Authenticate } from "./views/common/Authenticate";
 import EventContext from "./views/common/EventContext";
@@ -11,7 +13,11 @@ const Bookings = () => {
 
   const navigate = useNavigate();
   const eventEmitter = useContext(EventContext);
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState<BookingInterface[] | null>([]);
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    "Authorization": `${secureLocalStorage.getItem("authorization")}`,
+  };
 
   useEffect(() => {
     fetchBookings();
@@ -20,7 +26,7 @@ const Bookings = () => {
   const fetchBookings = () => {
     let url = "/api/v1/bookings?include=room";
 
-    const queryParams = [];
+    const queryParams: string[] = [];
     const queryString = queryParams.join("&");
     if (queryString) {
       url += `?${queryString}`;
@@ -28,17 +34,14 @@ const Bookings = () => {
 
     fetch(url, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": secureLocalStorage.getItem("authorization"),
-      },
+      headers: headers,
     })
       .then(res => {
-        handleResponse(res, (r) => {
+        handleResponse(res as Response, (r: ResponseTypeInterface) => {
           if (r.status == 'error') {
             eventEmitter.emit("showMessage", { text: JSON.parse(r.data)['message'], type: "failure" });
           } else {
-            setBookings(r.data)
+            setBookings(r.data as BookingInterface[])
             eventEmitter.emit("showMessage", { text: 'Bookings succesfully fetched', type: "success" });
           }
         })
@@ -48,18 +51,15 @@ const Bookings = () => {
       })
   };
 
-  const deleteBooking = (id) => {
+  const deleteBooking = (id: number) => {
     const url = `/api/v1/bookings/${id}`;
 
     fetch(url, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": secureLocalStorage.getItem("authorization"),
-      },
+      headers: headers,
     })
       .then(res => {
-        handleResponse(res, (r) => {
+        handleResponse(res as Response, (r: ResponseTypeInterface) => {
           if (r.status == 'error') {
             eventEmitter.emit("showMessage", { text: JSON.parse(r.data)['message'], type: "failure" });
           } else {
@@ -88,7 +88,7 @@ const Bookings = () => {
               </tr>
             </thead>
             <tbody>
-              {bookings.map((booking, index) => (
+              {bookings ? (bookings.map((booking: BookingInterface, index: number) => (
                 <tr key={index}>
                   <td>{booking.room.name}</td>
                   <td>{booking.start_time}</td>
@@ -104,13 +104,13 @@ const Bookings = () => {
                     </Link>
                   </td>
                   <td>
-                    <Link className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModalDelete">
+                    <Link to="" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModalDelete">
                       Delete Booking
                     </Link>
                     <Confirm modalID="confirmModalDelete" title={"Deleting Booking: " + booking.room.name} message="Are you sure?" confirm="Delete!" cancel="No" onConfirm={() => deleteBooking(booking.id)} />
                   </td>
                 </tr>
-              ))}
+              ))) : (<p>Loading...</p>)}
             </tbody>
           </table>
         </div>

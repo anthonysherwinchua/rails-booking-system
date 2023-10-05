@@ -1,6 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
+import { ResponseTypeInterface } from './interfaces/response_type_interface';
 import { handleResponse } from './helpers/handleResponse';
 import EventContext from "./views/common/EventContext";
 import UserProfile from './views/common/UserProfile';
@@ -10,12 +11,15 @@ const Login = () => {
   const eventEmitter = useContext(EventContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
 
-  const onChange = (event, setFunction) => {
+  const onChange = (event: ChangeEvent<HTMLInputElement>, setFunction: (value: string) => void): void => {
     setFunction(event.target.value);
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const url = "/api/login";
 
@@ -35,18 +39,19 @@ const Login = () => {
 
     fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: headers,
       body: JSON.stringify(body),
     })
       .then(res => {
-        handleResponse(res, (r) => {
+        handleResponse(res as Response, (r: ResponseTypeInterface) => {
           if (r.status == 'error') {
             eventEmitter.emit("showMessage", { text: JSON.parse(r.data)['message'], type: "failure" });
           } else {
             eventEmitter.emit("showMessage", { text: r.data['message'], type: "success" });
-            secureLocalStorage.setItem("authorization", res.headers.get("Authorization"))
+            const authorizationHeader = res.headers.get("Authorization");
+            if (authorizationHeader !== null) {
+              secureLocalStorage.setItem("authorization", authorizationHeader);
+            }
             UserProfile.setUser(JSON.parse(r.data['user']))
             navigate(`/`);
           }

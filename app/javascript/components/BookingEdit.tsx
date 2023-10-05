@@ -1,6 +1,8 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, ChangeEvent, FormEvent } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import secureLocalStorage from "react-secure-storage";
+import { BookingInterface } from './interfaces/booking_interface';
+import { ResponseTypeInterface } from './interfaces/response_type_interface';
 import { handleResponse } from './helpers/handleResponse';
 import { Authenticate } from "./views/common/Authenticate";
 import EventContext from "./views/common/EventContext";
@@ -11,24 +13,25 @@ const BookingEdit = () => {
   const navigate = useNavigate();
   const eventEmitter = useContext(EventContext);
   const { id } = useParams();
-  const [booking, setBooking] = useState(null);
+  const [booking, setBooking] = useState<BookingInterface | null>(null);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    "Authorization": `${secureLocalStorage.getItem("authorization")}`,
+  };
 
   useEffect(() => {
     fetch(`/api/v1/bookings/${id}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": secureLocalStorage.getItem("authorization"),
-      },
+      headers: headers,
     })
       .then(res => {
-        handleResponse(res, (r) => {
+        handleResponse(res as Response, (r: ResponseTypeInterface) => {
           if (r.status == 'error') {
             eventEmitter.emit("showMessage", { text: JSON.parse(r.data)['message'], type: "failure" });
           } else {
-            setBooking(r.data)
+            setBooking(r.data as BookingInterface)
             setStartTime(r.data.start_time)
             setEndTime(r.data.end_time)
             eventEmitter.emit("showMessage", { text: 'Booking succesfully fetched', type: "success" });
@@ -44,11 +47,11 @@ const BookingEdit = () => {
     return <div>Loading...</div>;
   }
 
-  const onChange = (event, setFunction) => {
+  const onChange = (event: ChangeEvent<HTMLInputElement>, setFunction: (value: string) => void): void => {
     setFunction(event.target.value);
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const body = {
@@ -60,17 +63,14 @@ const BookingEdit = () => {
 
     fetch(`/api/v1/bookings/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": secureLocalStorage.getItem("authorization"),
-      },
+      headers: headers,
       body: JSON.stringify(body),
     })
       .then(res => {
-        handleResponse(res, (r) => {
+        handleResponse(res as Response, (r: ResponseTypeInterface) => {
           if (r.status == 'error') {
             let data = JSON.parse(r.data)
-            let errorMessages = [];
+            let errorMessages: string[] = [];
             Object.keys(data).forEach(function (key) {
               const keyMessage = key.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
               let message = keyMessage + " " + data[key];
@@ -92,7 +92,7 @@ const BookingEdit = () => {
       })
   }
 
-  function formatDateTime(date) {
+  function formatDateTime(date: string | Date): string {
     date = new Date(date)
     const formattedDateTime = date.toISOString().slice(0, 16);
 

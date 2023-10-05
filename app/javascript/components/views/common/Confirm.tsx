@@ -1,8 +1,17 @@
 import React from "react";
 
-const Confirm = ({ modalID, title, message, confirm, cancel, onConfirm }) => {
+interface ConfirmProps {
+  modalID: string;
+  title: string;
+  message: string;
+  confirm: string;
+  cancel: string;
+  onConfirm: () => void;
+}
+
+const Confirm = ({ modalID, title, message, confirm, cancel, onConfirm }: ConfirmProps) => {
   return (
-    <div className="modal" id={modalID} tabIndex="-1">
+    <div className="modal" id={modalID} tabIndex={-1}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">

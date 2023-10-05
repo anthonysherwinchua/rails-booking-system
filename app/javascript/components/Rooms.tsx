@@ -1,5 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, ChangeEvent, FormEvent } from "react";
 import secureLocalStorage from "react-secure-storage";
+import { RoomInterface } from './interfaces/room_interface';
+import { ResponseTypeInterface } from './interfaces/response_type_interface';
 import { handleResponse } from './helpers/handleResponse';
 import { Authenticate } from "./views/common/Authenticate";
 import EventContext from "./views/common/EventContext";
@@ -9,15 +11,20 @@ const Rooms = () => {
   Authenticate()
 
   const eventEmitter = useContext(EventContext);
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState<RoomInterface[]>([]);
   const [capacities, setCapacities] = useState([]);
-  const [availableTags, setAvailableavailableTags] = useState([]);
+  const [availableTags, setAvailableavailableTags] = useState<string[]>([]);
 
   const [capacity, setCapacity] = useState("");
-  const [tags, setTags] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [bookingStartTime, setBookingStartTime] = useState("");
   const [bookingEndTime, setBookingEndTime] = useState("");
-  const [selectedRoomId, setSelectedRoomId] = useState(null);
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    "Authorization": `${secureLocalStorage.getItem("authorization")}`,
+  };
 
   useEffect(() => {
     fetchRooms();
@@ -48,25 +55,21 @@ const Rooms = () => {
 
     fetch(url, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": secureLocalStorage.getItem("authorization"),
-      },
+      headers: headers,
     })
       .then(res => {
-        handleResponse(res, (r) => {
+        handleResponse(res as Response, (r: ResponseTypeInterface) => {
           if (r.status == 'error') {
             eventEmitter.emit("showMessage", { text: JSON.parse(r.data)['message'], type: "failure" });
           } else {
             if (capacities.length < 1) {
-              setCapacities(r.data.map((room) => room.capacity).sort((a, b) => a - b))
+              setCapacities(r.data.map((room: RoomInterface) => room.capacity).sort((a: number, b: number) => a - b))
             }
             if (availableTags.length < 1) {
-              setAvailableavailableTags(
-                [...new Set(r.data.reduce((availableTags, room) => {
-                  return availableTags.concat(room.tags);
-                }, []))].sort()
-              )
+              const uniqueTags: string[] = [...new Set<string>(r.data.reduce((availableTags: string[], room: RoomInterface) => {
+                return availableTags.concat(room.tags);
+              }, []))].sort();
+              setAvailableavailableTags(uniqueTags)
             }
             setRooms(r.data)
             eventEmitter.emit("showMessage", { text: 'Rooms succesfully fetched', type: "success" });
@@ -78,7 +81,7 @@ const Rooms = () => {
       })
   };
 
-  const handleTagChange = (e, tag) => {
+  const handleTagChange = (e: ChangeEvent<HTMLInputElement>, tag: string) => {
     const isChecked = e.target.checked;
     if (isChecked) {
       setTags([...tags, tag]);
@@ -87,7 +90,7 @@ const Rooms = () => {
     }
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     fetchRooms();
   };
@@ -105,17 +108,14 @@ const Rooms = () => {
 
     fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": secureLocalStorage.getItem("authorization"),
-      },
+      headers: headers,
       body: JSON.stringify(body),
     })
       .then(res => {
         handleResponse(res, (r) => {
           if (r.status == 'error') {
             let data = JSON.parse(r.data)
-            let errorMessages = [];
+            let errorMessages: string[] = [];
             Object.keys(data).forEach(function (key) {
               const keyMessage = key.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
               let message = keyMessage + " " + data[key];

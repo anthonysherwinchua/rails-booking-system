@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
+import { ResponseTypeInterface } from './interfaces/response_type_interface';
 import { handleResponse } from './helpers/handleResponse';
 import { Authenticate } from "./views/common/Authenticate";
 import Confirm from './views/common/Confirm';
@@ -12,19 +13,20 @@ const LogOut = () => {
 
   const navigate = useNavigate();
   const eventEmitter = useContext(EventContext);
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    "Authorization": `${secureLocalStorage.getItem("authorization")}`,
+  };
 
   const logout = () => {
     const url = `/api/logout`;
 
     fetch(url, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": secureLocalStorage.getItem("authorization"),
-      },
+      headers: headers,
     })
       .then(res => {
-        handleResponse(res, (r) => {
+        handleResponse(res as Response, (r: ResponseTypeInterface) => {
           if (r.status == 'error') {
             eventEmitter.emit("showMessage", { text: JSON.parse(r.data)['message'], type: "failure" });
           } else {
@@ -44,7 +46,7 @@ const LogOut = () => {
 
   return (
     <li className="nav-item">
-      <Link className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">
+      <Link to="" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">
         Logout
       </Link>
       <Confirm modalID="confirmModal" title={"Log out"} message="Are you sure?" confirm="Logout!" cancel="No" onConfirm={logout} />
