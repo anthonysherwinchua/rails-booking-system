@@ -1,23 +1,25 @@
+import { UserInterface } from '../../interfaces/user_interface';
+
 var UserProfile = (function () {
-  var getName = function () {
+  var getName = function (): string | undefined {
     return getUser()['name']
   };
 
-  var getId = function () {
+  var getId = function (): string | undefined {
     return getUser()['id']
   };
 
-  var getJTI = function () {
+  var getJTI = function (): string | undefined {
     return getUser()['jti']
   };
 
-  var setUser = function (user) {
-    user['authenticate'] = true
+  var setUser = function (user: UserInterface): void {
+    user['authenticated'] = true
     localStorage.setItem('user', JSON.stringify(user))
     window.dispatchEvent(new Event("storage"));
   }
 
-  var removeUser = function () {
+  var removeUser = function (): void {
     localStorage.removeItem('user')
     window.dispatchEvent(new Event("storage"));
   }

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import NavLink from "./NavLink"
 import UserProfile from './UserProfile';
+import { UserInterface } from '../../interfaces/user_interface';
 import LogOut from '../../LogOut';
 
 const NavBar = () => {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState<UserInterface>({ authenticated: false });
 
   let sessionNavLink
 
