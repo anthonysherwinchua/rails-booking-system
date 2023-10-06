@@ -1,7 +1,10 @@
 import React from "react";
 import UserProfile from './views/common/UserProfile';
+import { Authenticate } from "./views/common/Authenticate";
 
 const Profile = () => {
+  Authenticate()
+
   const user = UserProfile.getUser();
 
   return (

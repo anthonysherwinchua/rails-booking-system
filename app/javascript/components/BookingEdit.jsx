@@ -2,9 +2,12 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import secureLocalStorage from "react-secure-storage";
 import { handleResponse } from './helpers/handleResponse';
+import { Authenticate } from "./views/common/Authenticate";
 import EventContext from "./views/common/EventContext";
 
 const BookingEdit = () => {
+  Authenticate()
+
   const navigate = useNavigate();
   const eventEmitter = useContext(EventContext);
   const { id } = useParams();
