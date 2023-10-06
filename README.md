@@ -49,20 +49,33 @@ Run the following commands to setup the database.
 bundle exec rake db:setup
 ```
 
-##### 3. Start the Rails server
-
-You can start the rails server using the command given below.
-
-```ruby
-bundle exec rails s
-```
-
 And now you can visit the site with the URL http://localhost:3000
 
-##### 4. Add ReactJS
+##### 3. Add ReactJS
 
 Run the following commands to add ReactJS and some of its essential libraries
 
 ```
 yarn add react react-dom react-router-dom
 ```
+
+##### 4. Install JS dependencies
+
+Run the following to resolve and install dependencies based on the package.json file, creating a 'node_modules' folder and ensuring version consistency via a 'yarn.lock' file
+
+```
+yarn install
+```
+
+##### 5. Run the server
+
+Run the command to start the server
+```
+bin/dev
+```
+
+##### 6. Install JS dependencies
+
+You can now visit `http://localhost:3000` as the user
+You can now visit `http://localhost:3000/admin` as the admin
+You can now visit `http://localhost:3000/sidekiq` as the developer for the backend jobs
