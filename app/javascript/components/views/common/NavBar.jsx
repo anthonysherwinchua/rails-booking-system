@@ -12,7 +12,7 @@ const NavBar = () => {
     setUser(UserProfile.getUser())
   }, []);
 
-  if (user['name'] === undefined) {
+  if (user.authenticated === false) {
     sessionNavLink = (
       <>
         <li className="nav-item"><NavLink path="/signup" text="Sign Up" /></li>
