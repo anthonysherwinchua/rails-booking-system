@@ -12,6 +12,7 @@ var UserProfile = (function () {
   };
 
   var setUser = function (user) {
+    user['authenticate'] = true
     localStorage.setItem('user', JSON.stringify(user))
     window.dispatchEvent(new Event("storage"));
   }
@@ -22,7 +23,7 @@ var UserProfile = (function () {
   }
 
   var getUser = function () {
-    let userProfile = localStorage.getItem('user') || '{}'
+    const userProfile = localStorage.getItem('user') || '{ "authenticated": false }'
 
     return JSON.parse(userProfile)
   }

@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
 import secureLocalStorage from "react-secure-storage";
 import { handleResponse } from './helpers/handleResponse';
+import { Authenticate } from "./views/common/Authenticate";
 import EventContext from "./views/common/EventContext";
 import Confirm from './views/common/Confirm';
 
 const Rooms = () => {
+  Authenticate()
+
   const eventEmitter = useContext(EventContext);
   const [rooms, setRooms] = useState([]);
   const [capacities, setCapacities] = useState([]);

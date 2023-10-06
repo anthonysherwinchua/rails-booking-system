@@ -2,11 +2,14 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
 import { handleResponse } from './helpers/handleResponse';
+import { Authenticate } from "./views/common/Authenticate";
 import Confirm from './views/common/Confirm';
 import EventContext from "./views/common/EventContext";
 import UserProfile from './views/common/UserProfile';
 
 const LogOut = () => {
+  Authenticate()
+
   const navigate = useNavigate();
   const eventEmitter = useContext(EventContext);
 

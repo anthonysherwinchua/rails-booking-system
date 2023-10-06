@@ -2,10 +2,13 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import secureLocalStorage from "react-secure-storage";
 import { handleResponse } from './helpers/handleResponse';
+import { Authenticate } from "./views/common/Authenticate";
 import EventContext from "./views/common/EventContext";
 import Confirm from './views/common/Confirm';
 
 const Bookings = () => {
+  Authenticate()
+
   const navigate = useNavigate();
   const eventEmitter = useContext(EventContext);
   const [bookings, setBookings] = useState([]);
